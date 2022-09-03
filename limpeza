@@ -1,3 +1,8 @@
+library(data.table)
+library(dplyr)
+library(tidyverse)
+library(funModeling) 
+
 sinistrosRecife2018Raw <- read.csv2('http://dados.recife.pe.gov.br/dataset/44087d2d-73b5-4ab3-9bd8-78da7436eed1/resource/2485590a-3b35-4ad0-b955-8dfc36b61021/download/acidentes_2018.csv', sep = ';', encoding = 'UTF-8')
 
 #seleção de colunas
