@@ -1,18 +1,33 @@
+install.packages("data.table")
 library(data.table)
+install.packages("dplyr")
 library(dplyr)
+install.packages("tidyverse")
 library(tidyverse)
+install.packages("funModeling")
 library(funModeling) 
 
-sinistrosRecife2018Raw <- read.csv2('http://dados.recife.pe.gov.br/dataset/44087d2d-73b5-4ab3-9bd8-78da7436eed1/resource/2485590a-3b35-4ad0-b955-8dfc36b61021/download/acidentes_2018.csv', sep = ';', encoding = 'UTF-8')
+#dados covid no mundo
+general_data <- fread("https://covid.ourworldindata.org/data/owid-covid-data.csv") 
 
-#seleção de colunas
-sinistrosRecife2018Selected <- sinistrosRecife2018Raw %>% select("moto", "auto", "vitimas")
+latin_america_countries <-c("Argentina", "Brazil", "Bolivia", "Chile", "Colombia", "Costa Rica", "Cuba", "Dominican Republic", "Ecuador", "El Salvador", "Guatemala", "Haiti", "Honduras", "Mexico", "Nicaragua", "Panama", "Paraguay", "Peru", "Uruguay", "Venezuela")
 
-status(sinistrosRecife2018Selected) 
-freq(sinistrosRecife2018Selected) 
-plot_num(sinistrosRecife2018Selected) 
-profiling_num(sinistrosRecife2018Selected) 
+latin_america <- general_data %>% filter(location %in% latin_america_countries) 
 
-sinistrosRecife2018Selected %>% filter(new_cases < 0)
+latin_america <- latin_america %>% select(location, new_cases, new_deaths)
 
-sinistrosRecife2018Selected <- sinistrosRecife2018Selected %>% filter(new_cases>=0)
+status(latin_america) # estrutura dos dados (missing etc)
+freq(latin_america) # frequência das variáveis fator
+plot_num(latin_america) # exploração das variáveis numéricas
+profiling_num(latin_america) # estatísticas das variáveis numéricas
+
+latin_america %>% filter(new_cases < 0)
+
+latin_america <- latin_america %>% filter(new_cases>=0)
+
+#removendo na
+latin_america <- latin_america %>% filter(!is.na(new_deaths))
+
+latin_america <- latin_america %>% filter(!is.na(new_cases))
+
+data_omit <- na.omit(latin_america)
